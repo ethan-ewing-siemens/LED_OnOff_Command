@@ -37,11 +37,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  0001c62e  00000000  00000000  00015160  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   0000c949  00000000  00000000  0003178e  2**0
+ 17 .debug_line   0000c947  00000000  00000000  0003178e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000b36e1  00000000  00000000  0003e0d7  2**0
+ 18 .debug_str    000b36e1  00000000  00000000  0003e0d5  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  000f17b8  2**0
+ 19 .comment      00000043  00000000  00000000  000f17b6  2**0
                   CONTENTS, READONLY
  20 .debug_frame  00002974  00000000  00000000  000f17fc  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -421,12 +421,12 @@ int main(void)
   {
 
     /* USER CODE END WHILE */
-	  uint8_t rxBuffer[8] = {0};
+      uint8_t rxBuffer[8] = {0};
  8000568:	f107 0374 	add.w	r3, r7, #116	@ 0x74
  800056c:	2200      	movs	r2, #0
  800056e:	601a      	str	r2, [r3, #0]
  8000570:	605a      	str	r2, [r3, #4]
-	      uint8_t msg[] = "Enter 'on', 'off', or 'status':\r\n";
+      uint8_t msg[] = "Enter 'on', 'off', or 'status':\r\n";
  8000572:	4b6b      	ldr	r3, [pc, #428]	@ (8000720 <main+0x1dc>)
  8000574:	463c      	mov	r4, r7
  8000576:	461d      	mov	r5, r3
@@ -436,36 +436,36 @@ int main(void)
  800057e:	c40f      	stmia	r4!, {r0, r1, r2, r3}
  8000580:	682b      	ldr	r3, [r5, #0]
  8000582:	8023      	strh	r3, [r4, #0]
-	      HAL_UART_Transmit(&hlpuart1, msg, sizeof(msg)-1, HAL_MAX_DELAY);
+      HAL_UART_Transmit(&hlpuart1, msg, sizeof(msg)-1, HAL_MAX_DELAY);
  8000584:	4639      	mov	r1, r7
  8000586:	f04f 33ff 	mov.w	r3, #4294967295
  800058a:	2221      	movs	r2, #33	@ 0x21
  800058c:	4865      	ldr	r0, [pc, #404]	@ (8000724 <main+0x1e0>)
  800058e:	f001 ff5b 	bl	8002448 <HAL_UART_Transmit>
 
-	     // Read input until Enter is pressed (CR or LF)
-	      uint8_t idx = 0;
+      // Read input until Enter is pressed (CR or LF)
+      uint8_t idx = 0;
  8000592:	2300      	movs	r3, #0
  8000594:	f887 307f 	strb.w	r3, [r7, #127]	@ 0x7f
-	      uint8_t ch;
-	      while (idx < sizeof(rxBuffer) - 1) {
+      uint8_t ch;
+      while (idx < sizeof(rxBuffer) - 1) {
  8000598:	e01a      	b.n	80005d0 <main+0x8c>
-	          HAL_UART_Receive(&hlpuart1, &ch, 1, HAL_MAX_DELAY);
+          HAL_UART_Receive(&hlpuart1, &ch, 1, HAL_MAX_DELAY);
  800059a:	f107 0173 	add.w	r1, r7, #115	@ 0x73
  800059e:	f04f 33ff 	mov.w	r3, #4294967295
  80005a2:	2201      	movs	r2, #1
  80005a4:	485f      	ldr	r0, [pc, #380]	@ (8000724 <main+0x1e0>)
  80005a6:	f001 ffdd 	bl	8002564 <HAL_UART_Receive>
-	          if (ch == '\r' || ch == '\n') {
+          if (ch == '\r' || ch == '\n') {
  80005aa:	f897 3073 	ldrb.w	r3, [r7, #115]	@ 0x73
  80005ae:	2b0d      	cmp	r3, #13
  80005b0:	d012      	beq.n	80005d8 <main+0x94>
  80005b2:	f897 3073 	ldrb.w	r3, [r7, #115]	@ 0x73
  80005b6:	2b0a      	cmp	r3, #10
  80005b8:	d00e      	beq.n	80005d8 <main+0x94>
-	              break;
-	          }
-	          rxBuffer[idx++] = ch;
+              break;
+          }
+          rxBuffer[idx++] = ch;
  80005ba:	f897 307f 	ldrb.w	r3, [r7, #127]	@ 0x7f
  80005be:	1c5a      	adds	r2, r3, #1
  80005c0:	f887 207f 	strb.w	r2, [r7, #127]	@ 0x7f
@@ -473,20 +473,20 @@ int main(void)
  80005c8:	3380      	adds	r3, #128	@ 0x80
  80005ca:	443b      	add	r3, r7
  80005cc:	f803 2c0c 	strb.w	r2, [r3, #-12]
-	      while (idx < sizeof(rxBuffer) - 1) {
+      while (idx < sizeof(rxBuffer) - 1) {
  80005d0:	f897 307f 	ldrb.w	r3, [r7, #127]	@ 0x7f
  80005d4:	2b06      	cmp	r3, #6
  80005d6:	d9e0      	bls.n	800059a <main+0x56>
-	      }
-	      rxBuffer[idx] = '\0';
+      }
+      rxBuffer[idx] = '\0';
  80005d8:	f897 307f 	ldrb.w	r3, [r7, #127]	@ 0x7f
  80005dc:	3380      	adds	r3, #128	@ 0x80
  80005de:	443b      	add	r3, r7
  80005e0:	2200      	movs	r2, #0
  80005e2:	f803 2c0c 	strb.w	r2, [r3, #-12]
 
-	      // Simple string compare for "on" or "off"
-	      if ((strncmp((char*)rxBuffer, "on", 2) == 0)) {
+      // Simple string compare for "on" or "off"
+      if ((strncmp((char*)rxBuffer, "on", 2) == 0)) {
  80005e6:	f107 0374 	add.w	r3, r7, #116	@ 0x74
  80005ea:	2202      	movs	r2, #2
  80005ec:	494e      	ldr	r1, [pc, #312]	@ (8000728 <main+0x1e4>)
@@ -495,7 +495,7 @@ int main(void)
  80005f4:	4603      	mov	r3, r0
  80005f6:	2b00      	cmp	r3, #0
  80005f8:	d116      	bne.n	8000628 <main+0xe4>
-	          uint8_t resp[] = "You entered ON\r\n";
+          uint8_t resp[] = "You entered ON\r\n";
  80005fa:	4b4c      	ldr	r3, [pc, #304]	@ (800072c <main+0x1e8>)
  80005fc:	f107 0460 	add.w	r4, r7, #96	@ 0x60
  8000600:	461d      	mov	r5, r3
@@ -503,19 +503,19 @@ int main(void)
  8000604:	c40f      	stmia	r4!, {r0, r1, r2, r3}
  8000606:	682b      	ldr	r3, [r5, #0]
  8000608:	7023      	strb	r3, [r4, #0]
-	          HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
+          HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
  800060a:	f107 0160 	add.w	r1, r7, #96	@ 0x60
  800060e:	f04f 33ff 	mov.w	r3, #4294967295
  8000612:	2210      	movs	r2, #16
  8000614:	4843      	ldr	r0, [pc, #268]	@ (8000724 <main+0x1e0>)
  8000616:	f001 ff17 	bl	8002448 <HAL_UART_Transmit>
-	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);   // Turn LED ON
+          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);   // Turn LED ON
  800061a:	2201      	movs	r2, #1
  800061c:	2120      	movs	r1, #32
  800061e:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
  8000622:	f000 fed7 	bl	80013d4 <HAL_GPIO_WritePin>
  8000626:	e076      	b.n	8000716 <main+0x1d2>
-	      } else if ((strncmp((char*)rxBuffer, "off", 3) == 0)) {
+      } else if ((strncmp((char*)rxBuffer, "off", 3) == 0)) {
  8000628:	f107 0374 	add.w	r3, r7, #116	@ 0x74
  800062c:	2203      	movs	r2, #3
  800062e:	4940      	ldr	r1, [pc, #256]	@ (8000730 <main+0x1ec>)
@@ -524,7 +524,7 @@ int main(void)
  8000636:	4603      	mov	r3, r0
  8000638:	2b00      	cmp	r3, #0
  800063a:	d116      	bne.n	800066a <main+0x126>
-	          uint8_t resp[] = "You entered OFF\r\n";
+          uint8_t resp[] = "You entered OFF\r\n";
  800063c:	4b3d      	ldr	r3, [pc, #244]	@ (8000734 <main+0x1f0>)
  800063e:	f107 044c 	add.w	r4, r7, #76	@ 0x4c
  8000642:	461d      	mov	r5, r3
@@ -532,19 +532,19 @@ int main(void)
  8000646:	c40f      	stmia	r4!, {r0, r1, r2, r3}
  8000648:	682b      	ldr	r3, [r5, #0]
  800064a:	8023      	strh	r3, [r4, #0]
-	          HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
+          HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
  800064c:	f107 014c 	add.w	r1, r7, #76	@ 0x4c
  8000650:	f04f 33ff 	mov.w	r3, #4294967295
  8000654:	2211      	movs	r2, #17
  8000656:	4833      	ldr	r0, [pc, #204]	@ (8000724 <main+0x1e0>)
  8000658:	f001 fef6 	bl	8002448 <HAL_UART_Transmit>
-	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET); // Turn LED OFF
+          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET); // Turn LED OFF
  800065c:	2200      	movs	r2, #0
  800065e:	2120      	movs	r1, #32
  8000660:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
  8000664:	f000 feb6 	bl	80013d4 <HAL_GPIO_WritePin>
  8000668:	e055      	b.n	8000716 <main+0x1d2>
-	      } else if ((strncmp((char*)rxBuffer, "status", 5) ==0)) {
+      } else if ((strncmp((char*)rxBuffer, "status", 5) ==0)) {
  800066a:	f107 0374 	add.w	r3, r7, #116	@ 0x74
  800066e:	2205      	movs	r2, #5
  8000670:	4931      	ldr	r1, [pc, #196]	@ (8000738 <main+0x1f4>)
@@ -553,74 +553,74 @@ int main(void)
  8000678:	4603      	mov	r3, r0
  800067a:	2b00      	cmp	r3, #0
  800067c:	d13d      	bne.n	80006fa <main+0x1b6>
-	          uint8_t resp[] = "LED is ";
+          uint8_t resp[] = "LED is ";
  800067e:	4a2f      	ldr	r2, [pc, #188]	@ (800073c <main+0x1f8>)
  8000680:	f107 0344 	add.w	r3, r7, #68	@ 0x44
  8000684:	e892 0003 	ldmia.w	r2, {r0, r1}
  8000688:	e883 0003 	stmia.w	r3, {r0, r1}
-	          HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
+          HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
  800068c:	f107 0144 	add.w	r1, r7, #68	@ 0x44
  8000690:	f04f 33ff 	mov.w	r3, #4294967295
  8000694:	2207      	movs	r2, #7
  8000696:	4823      	ldr	r0, [pc, #140]	@ (8000724 <main+0x1e0>)
  8000698:	f001 fed6 	bl	8002448 <HAL_UART_Transmit>
-	          if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5) == GPIO_PIN_SET) {
+          if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5) == GPIO_PIN_SET) {
  800069c:	2120      	movs	r1, #32
  800069e:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
  80006a2:	f000 fe7f 	bl	80013a4 <HAL_GPIO_ReadPin>
  80006a6:	4603      	mov	r3, r0
  80006a8:	2b01      	cmp	r3, #1
  80006aa:	d10d      	bne.n	80006c8 <main+0x184>
-	            uint8_t resp[] = "ON\r\n";
+            uint8_t resp[] = "ON\r\n";
  80006ac:	4b24      	ldr	r3, [pc, #144]	@ (8000740 <main+0x1fc>)
  80006ae:	63fb      	str	r3, [r7, #60]	@ 0x3c
  80006b0:	2300      	movs	r3, #0
  80006b2:	f887 3040 	strb.w	r3, [r7, #64]	@ 0x40
-	            HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
+            HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
  80006b6:	f107 013c 	add.w	r1, r7, #60	@ 0x3c
  80006ba:	f04f 33ff 	mov.w	r3, #4294967295
  80006be:	2204      	movs	r2, #4
  80006c0:	4818      	ldr	r0, [pc, #96]	@ (8000724 <main+0x1e0>)
  80006c2:	f001 fec1 	bl	8002448 <HAL_UART_Transmit>
  80006c6:	e026      	b.n	8000716 <main+0x1d2>
-	          } else if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5) == GPIO_PIN_RESET) {
+          } else if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5) == GPIO_PIN_RESET) {
  80006c8:	2120      	movs	r1, #32
  80006ca:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
  80006ce:	f000 fe69 	bl	80013a4 <HAL_GPIO_ReadPin>
  80006d2:	4603      	mov	r3, r0
  80006d4:	2b00      	cmp	r3, #0
  80006d6:	d11e      	bne.n	8000716 <main+0x1d2>
-	            uint8_t resp[] = "OFF\r\n";
+            uint8_t resp[] = "OFF\r\n";
  80006d8:	4a1a      	ldr	r2, [pc, #104]	@ (8000744 <main+0x200>)
  80006da:	f107 0334 	add.w	r3, r7, #52	@ 0x34
  80006de:	e892 0003 	ldmia.w	r2, {r0, r1}
  80006e2:	6018      	str	r0, [r3, #0]
  80006e4:	3304      	adds	r3, #4
  80006e6:	8019      	strh	r1, [r3, #0]
-	            HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
+            HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
  80006e8:	f107 0134 	add.w	r1, r7, #52	@ 0x34
  80006ec:	f04f 33ff 	mov.w	r3, #4294967295
  80006f0:	2205      	movs	r2, #5
  80006f2:	480c      	ldr	r0, [pc, #48]	@ (8000724 <main+0x1e0>)
  80006f4:	f001 fea8 	bl	8002448 <HAL_UART_Transmit>
  80006f8:	e00d      	b.n	8000716 <main+0x1d2>
-	          }
-	      }
-	      else {
-	          uint8_t resp[] = "Invalid input\r\n";
+          }
+      }
+      else {
+          uint8_t resp[] = "Invalid input\r\n";
  80006fa:	4b13      	ldr	r3, [pc, #76]	@ (8000748 <main+0x204>)
  80006fc:	f107 0424 	add.w	r4, r7, #36	@ 0x24
  8000700:	cb0f      	ldmia	r3, {r0, r1, r2, r3}
  8000702:	e884 000f 	stmia.w	r4, {r0, r1, r2, r3}
-	          HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
+          HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
  8000706:	f107 0124 	add.w	r1, r7, #36	@ 0x24
  800070a:	f04f 33ff 	mov.w	r3, #4294967295
  800070e:	220f      	movs	r2, #15
  8000710:	4804      	ldr	r0, [pc, #16]	@ (8000724 <main+0x1e0>)
  8000712:	f001 fe99 	bl	8002448 <HAL_UART_Transmit>
-	      }
+      }
 
-	      HAL_Delay(500);
+      HAL_Delay(500);
  8000716:	f44f 70fa 	mov.w	r0, #500	@ 0x1f4
  800071a:	f000 fb2f 	bl	8000d7c <HAL_Delay>
   {

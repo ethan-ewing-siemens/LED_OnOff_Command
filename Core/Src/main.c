@@ -106,48 +106,48 @@ int main(void)
   {
 
     /* USER CODE END WHILE */
-	  uint8_t rxBuffer[8] = {0};
-	      uint8_t msg[] = "Enter 'on', 'off', or 'status':\r\n";
-	      HAL_UART_Transmit(&hlpuart1, msg, sizeof(msg)-1, HAL_MAX_DELAY);
+      uint8_t rxBuffer[8] = {0};
+      uint8_t msg[] = "Enter 'on', 'off', or 'status':\r\n";
+      HAL_UART_Transmit(&hlpuart1, msg, sizeof(msg)-1, HAL_MAX_DELAY);
 
-	     // Read input until Enter is pressed (CR or LF)
-	      uint8_t idx = 0;
-	      uint8_t ch;
-	      while (idx < sizeof(rxBuffer) - 1) {
-	          HAL_UART_Receive(&hlpuart1, &ch, 1, HAL_MAX_DELAY);
-	          if (ch == '\r' || ch == '\n') {
-	              break;
-	          }
-	          rxBuffer[idx++] = ch;
-	      }
-	      rxBuffer[idx] = '\0';
+      // Read input until Enter is pressed (CR or LF)
+      uint8_t idx = 0;
+      uint8_t ch;
+      while (idx < sizeof(rxBuffer) - 1) {
+          HAL_UART_Receive(&hlpuart1, &ch, 1, HAL_MAX_DELAY);
+          if (ch == '\r' || ch == '\n') {
+              break;
+          }
+          rxBuffer[idx++] = ch;
+      }
+      rxBuffer[idx] = '\0';
 
-	      // Simple string compare for "on" or "off"
-	      if ((strncmp((char*)rxBuffer, "on", 2) == 0)) {
-	          uint8_t resp[] = "You entered ON\r\n";
-	          HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
-	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);   // Turn LED ON
-	      } else if ((strncmp((char*)rxBuffer, "off", 3) == 0)) {
-	          uint8_t resp[] = "You entered OFF\r\n";
-	          HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
-	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET); // Turn LED OFF
-	      } else if ((strncmp((char*)rxBuffer, "status", 5) ==0)) {
-	          uint8_t resp[] = "LED is ";
-	          HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
-	          if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5) == GPIO_PIN_SET) {
-	            uint8_t resp[] = "ON\r\n";
-	            HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
-	          } else if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5) == GPIO_PIN_RESET) {
-	            uint8_t resp[] = "OFF\r\n";
-	            HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
-	          }
-	      }
-	      else {
-	          uint8_t resp[] = "Invalid input\r\n";
-	          HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
-	      }
+      // Simple string compare for "on" or "off"
+      if ((strncmp((char*)rxBuffer, "on", 2) == 0)) {
+          uint8_t resp[] = "You entered ON\r\n";
+          HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
+          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);   // Turn LED ON
+      } else if ((strncmp((char*)rxBuffer, "off", 3) == 0)) {
+          uint8_t resp[] = "You entered OFF\r\n";
+          HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
+          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET); // Turn LED OFF
+      } else if ((strncmp((char*)rxBuffer, "status", 5) ==0)) {
+          uint8_t resp[] = "LED is ";
+          HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
+          if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5) == GPIO_PIN_SET) {
+            uint8_t resp[] = "ON\r\n";
+            HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
+          } else if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5) == GPIO_PIN_RESET) {
+            uint8_t resp[] = "OFF\r\n";
+            HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
+          }
+      }
+      else {
+          uint8_t resp[] = "Invalid input\r\n";
+          HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
+      }
 
-	      HAL_Delay(500);
+      HAL_Delay(500);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
