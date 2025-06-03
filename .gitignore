@@ -1,0 +1,36 @@
+# STM32CubeIDE auto-generated files
+*.launch
+*.log
+*.bin
+*.elf
+*.hex
+*.map
+*.o
+*.d
+*.lst
+*.su
+*.dep
+
+# Build output
+/Debug/
+/Release/
+/build/
+/out/
+
+# IDE settings
+/.settings/
+/.cproject
+.project
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*~
+*.swp
+*.bak
+
+Drivers/
+Middlewares/
+Core/Inc/
