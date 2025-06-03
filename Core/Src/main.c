@@ -201,7 +201,6 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void EXTI15_10_IRQHandler(void)
 {
-
   /* USER CODE BEGIN EXTI15_10_IRQn 0 */
 
   /* USER CODE END EXTI15_10_IRQn 0 */
@@ -211,7 +210,6 @@ void EXTI15_10_IRQHandler(void)
   HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // Toggle LED
 
   /* USER CODE END EXTI15_10_IRQn 1 */
-  
 }
 /* USER CODE END 4 */
 
