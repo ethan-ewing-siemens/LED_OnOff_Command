@@ -19,8 +19,7 @@
 
 # IDE settings
 /.settings/
-/.cproject
-.project
+
 
 # OS-specific files
 .DS_Store
@@ -30,7 +29,3 @@ Thumbs.db
 *~
 *.swp
 *.bak
-
-Drivers/
-Middlewares/
-Core/Inc/

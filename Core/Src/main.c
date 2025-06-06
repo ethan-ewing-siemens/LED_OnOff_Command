@@ -18,12 +18,10 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "usart.h"
-#include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "app_cli.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,12 +41,16 @@
 
 /* Private variables ---------------------------------------------------------*/
 
+UART_HandleTypeDef hlpuart1;
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_LPUART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -95,8 +97,8 @@ int main(void)
   /* Initialize leds */
   BSP_LED_Init(LED_GREEN);
 
-  /* Initialize User push-button without interrupt mode. */
-  BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
+  /* Initialize USER push-button, will be used to trigger an interrupt each time it's pressed.*/
+  BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -106,48 +108,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  uint8_t rxBuffer[8] = {0};
-  uint8_t msg[] = "Enter 'on', 'off', or 'status':\r\n";
-  HAL_UART_Transmit(&hlpuart1, msg, sizeof(msg)-1, HAL_MAX_DELAY);
+    app_cli_process();
 
-  // Read input until Enter is pressed (CR or LF)
-  uint8_t idx = 0;
-  uint8_t ch;
-  while (idx < sizeof(rxBuffer) - 1) {
-	  HAL_UART_Receive(&hlpuart1, &ch, 1, HAL_MAX_DELAY);
-	  if (ch == '\r' || ch == '\n') {
-		  break;
-	  }
-	  rxBuffer[idx++] = ch;
-  }
-  rxBuffer[idx] = '\0';
-
-  // Simple string compare for "on" or "off"
-  if ((strncmp((char*)rxBuffer, "on", 2) == 0)) {
-	  uint8_t resp[] = "You entered ON\r\n";
-	  HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);   // Turn LED ON
-  } else if ((strncmp((char*)rxBuffer, "off", 3) == 0)) {
-	  uint8_t resp[] = "You entered OFF\r\n";
-	  HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET); // Turn LED OFF
-  } else if ((strncmp((char*)rxBuffer, "status", 5) ==0)) {
-	  uint8_t resp[] = "LED is ";
-	  HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
-	  if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5) == GPIO_PIN_SET) {
-		uint8_t resp[] = "ON\r\n";
-		HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
-	  } else if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5) == GPIO_PIN_RESET) {
-		uint8_t resp[] = "OFF\r\n";
-		HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
-	  }
-  }
-  else {
-	  uint8_t resp[] = "Invalid input\r\n";
-	  HAL_UART_Transmit(&hlpuart1, resp, sizeof(resp)-1, HAL_MAX_DELAY);
-  }
-
-  HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }
@@ -196,6 +158,96 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief LPUART1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_LPUART1_UART_Init(void)
+{
+
+  /* USER CODE BEGIN LPUART1_Init 0 */
+
+  /* USER CODE END LPUART1_Init 0 */
+
+  /* USER CODE BEGIN LPUART1_Init 1 */
+
+  /* USER CODE END LPUART1_Init 1 */
+  hlpuart1.Instance = LPUART1;
+  hlpuart1.Init.BaudRate = 115200;
+  hlpuart1.Init.WordLength = UART_WORDLENGTH_8B;
+  hlpuart1.Init.StopBits = UART_STOPBITS_1;
+  hlpuart1.Init.Parity = UART_PARITY_NONE;
+  hlpuart1.Init.Mode = UART_MODE_TX_RX;
+  hlpuart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  hlpuart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  hlpuart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  hlpuart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&hlpuart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetTxFifoThreshold(&hlpuart1, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetRxFifoThreshold(&hlpuart1, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_DisableFifoMode(&hlpuart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN LPUART1_Init 2 */
+
+  /* USER CODE END LPUART1_Init 2 */
+
+}
+
+/**
+  * @brief GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_GPIO_Init(void)
+{
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  /* USER CODE BEGIN MX_GPIO_Init_1 */
+
+  /* USER CODE END MX_GPIO_Init_1 */
+
+  /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : Button_Pin */
+  GPIO_InitStruct.Pin = Button_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(Button_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA5 */
+  GPIO_InitStruct.Pin = GPIO_PIN_5;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+
+  /* USER CODE BEGIN MX_GPIO_Init_2 */
+
+  /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
