@@ -19,7 +19,7 @@
 
 # IDE settings
 /.settings/
-/.cproject
+
 
 # OS-specific files
 .DS_Store
